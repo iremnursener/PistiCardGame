@@ -13,12 +13,29 @@ public class Game {
 
 		int cutPoint = GetCutPointFromUser();
 
+		// PrintDeck(gameDeck.getCards()); // CONTROL
+		// gameDeck.CutDeck(cutPoint); // Cards are ready to play CONTROL
+		// System.out.println("---"); // CONTROL
+		// PrintDeck(gameDeck.getCards()); // CONTROL
+
+		gameDeck.CutDeck(cutPoint);
 		PrintDeck(gameDeck.getCards()); // CONTROL
-		gameDeck.CutDeck(cutPoint); // Cards are ready to play CONTROL
-		System.out.println("---"); // CONTROL
-		PrintDeck(gameDeck.getCards()); // CONTROL
-		DealFirstHand(gameDeck.getCards(), player1, computer, board);
-		PrintActiveHand(player1.getActiveHand(), board);
+
+		// Game-------------------------------
+		for (int hand = 1; hand <= 6; hand++) {
+
+			System.out.println("HAND" + hand);
+			System.out.println("---------------------------");
+			if (hand == 1) {
+				DealFirstHand(gameDeck.getCards(), player1, computer, board);
+				PrintActiveHand(player1.getActiveHand(), board);
+
+			} else {
+				DealHands(gameDeck.getCards(), player1, computer,hand);
+				PrintActiveHand(player1.getActiveHand(), board);
+
+			}
+		}
 
 		/*
 		 * 
@@ -35,13 +52,15 @@ public class Game {
 
 	}
 
-	public static void DealHands(Card[] cards, Player player1, Player computer, Card[] board) {
-		int cardindex = 12;
-		for (int i = 4; i < 8; i++) {
+	public static void DealHands(Card[] cards, Player player1, Player computer, int hand) {
+		int cardindex = 4 +(( hand-1)* 8);
+		for (int i = 0; i < 4; i++) {
+
 			player1.ActiveHand[i] = cards[cardindex];
 			cardindex++;
 			computer.ActiveHand[i] = cards[cardindex];
 			cardindex++;
+
 		}
 
 	}
@@ -49,13 +68,16 @@ public class Game {
 //Dealing First Hand (Including Board)
 	public static void DealFirstHand(Card[] cards, Player player1, Player computer, Card[] board) {
 		int cardindex = 0;
+
 		for (int i = 0; i < 4; i++) {
+
 			player1.ActiveHand[i] = cards[cardindex];
 			cardindex++;
 			computer.ActiveHand[i] = cards[cardindex];
 			cardindex++;
 			board[i] = cards[cardindex];
 			cardindex++;
+
 		}
 
 	}
