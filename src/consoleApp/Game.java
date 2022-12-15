@@ -28,13 +28,19 @@ public class Game {
 			System.out.println("---------------------------");
 
 			DealHands(gameDeck.getCards(), player1, computer, board, hand);
-			PrintActiveHand(player1.getActiveHand(), board);
+			PrintGameTable(board, computer, player1);
+			for (int times = 1; times <= 4; times++) { // a player(player1) have 4 cards so player will play 4 times
+				Scanner scan = new Scanner(System.in);
+				System.out.println("Choose one card to play:");
+				int cardOrder = scan.nextInt();
 
+				player1.PlayHand(cardOrder,times);
+			}
 		}
 
 		/*
 		 * 
-		/ * while (!gameDeck.IsAllCardsUsed()) {
+		 * / * while (!gameDeck.IsAllCardsUsed()) {
 		 * 
 		 * DealHands();
 		 * 
@@ -61,7 +67,7 @@ public class Game {
 				board[i] = cards[cardindex];
 				cardindex++;
 			}
-			// Dealing Hands 2-6
+			// Dealing Hands( 2-6 )
 		} else {
 			int cardindex = 4 + ((hand - 1) * 8);
 			for (int i = 0; i < 4; i++) {
@@ -92,18 +98,18 @@ public class Game {
 	}
 
 //Printing ActiveHand
-	public static void PrintActiveHand(Card[] ActiveHand, Card[] board) {
+	public static void PrintGameTable(Card[] board, Player computer, Player player1) {
+		System.out.println();
+		System.out.println("█ █ █ █ Computer ");
+		computer.PrintActiveHand();
+		System.out.println();
 		System.out.println("█ █ █ █ BOARD ");
 		for (int i = 0; i < 4; i++) {
-
 			System.out.print(board[i].GetCardName() + "  ");
-
 		}
 		System.out.println();
 		System.out.println("█ █ █ █ YOU ");
-		for (int i = 0; i < 4; i++) {
-			System.out.print(ActiveHand[i].GetCardName() + "  ");
-		}
+		player1.PrintActiveHand();
 
 	}
 
