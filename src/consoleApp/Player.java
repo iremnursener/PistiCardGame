@@ -29,34 +29,27 @@ public class Player {
 		}
 	}
 
-	public Card[] RemoveCardFromActiveHand(int cardOrder, int times) {
-		if (times == 1) {
-			ActiveHand[cardOrder - 1] = null;
-		} else {
-			int indexCounter = 0;
-			for (int i = 0; i < 4; i++) {
-				if (ActiveHand[i] != null && ActiveHand[cardOrder ]!= ActiveHand[indexCounter]) {
-					indexCounter++;
-					if (ActiveHand[cardOrder ] ==ActiveHand[ indexCounter]) {
-						cardOrder = indexCounter;
-						break;
-					} 
+	public void RemoveCardFromActiveHand(int cardOrder) {
 
+		int indexCounter = 0;
+		for (int i = 0; i < 4; i++) {
+			if (ActiveHand[i] != null) {
+				indexCounter++;
+				if (cardOrder == indexCounter) {
+					ActiveHand[i] = null;
+					break;
 				}
-				
 
 			}
-
-			ActiveHand[cardOrder] = null;
 		}
-		return ActiveHand;
+	
 	}
 
-	public void PlayHand(int cardOrder, int times) {
+	public void PlayHand(int cardOrder) {
 
-		RemoveCardFromActiveHand(cardOrder, times);
+		RemoveCardFromActiveHand(cardOrder);
 		PrintActiveHand();
-
+		
 	}
 
 }

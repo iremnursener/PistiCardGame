@@ -34,7 +34,7 @@ public class Game {
 				System.out.println("Choose one card to play:");
 				int cardOrder = scan.nextInt();
 
-				player1.PlayHand(cardOrder,times);
+				player1.PlayHand(cardOrder);
 			}
 		}
 
