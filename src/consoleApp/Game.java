@@ -1,5 +1,6 @@
 package consoleApp;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class Game {
@@ -22,19 +23,26 @@ public class Game {
 		PrintDeck(gameDeck.getCards()); // CONTROL
 
 		// Game-------------------------------
-		for (int hand = 1; hand <= 6; hand++) {
+		for (int hand = 1; hand <= 6; hand++) { //we will play the game until all cards(52) are used so game will last until 6th hand is dealed
 			System.out.println();
 			System.out.println("HAND" + hand);
 			System.out.println("---------------------------");
 
 			DealHands(gameDeck.getCards(), player1, computer, board, hand);
-			PrintGameTable(board, computer, player1);
-			for (int times = 1; times <= 4; times++) { // a player(player1) have 4 cards so player will play 4 times
+
+			for (int times = 1; times <= 4; times++) { // a player(computer and player1) have 4 cards so players will play cards for 4 times
+
+				PrintGameTable(board, computer, player1); //we  show the current table(before starting the hand and after playing a card) 
+
 				Scanner scan = new Scanner(System.in);
+				Random rand = new Random();
 				System.out.println("Choose one card to play:");
 				int cardOrder = scan.nextInt();
+				int randomCardOrder = rand.nextInt(4);
 
 				player1.PlayHand(cardOrder);
+				computer.PlayHand(randomCardOrder);
+
 			}
 		}
 

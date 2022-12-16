@@ -38,7 +38,7 @@ public class Player {
 				if (cardOrder == indexCounter) {
 					ActiveHand[i] = null;
 					break;
-				}
+				} 
 
 			}
 		}
@@ -48,7 +48,7 @@ public class Player {
 	public void PlayHand(int cardOrder) {
 
 		RemoveCardFromActiveHand(cardOrder);
-		PrintActiveHand();
+	
 		
 	}
 
