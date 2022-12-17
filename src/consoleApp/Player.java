@@ -29,27 +29,43 @@ public class Player {
 		}
 	}
 
-	public void RemoveCardFromActiveHand(int cardOrder) {
-
+	public Card RemoveCardFromActiveHand(int selectedCardIndex) {
+		Card selectedCard = null;
 		int indexCounter = 0;
 		for (int i = 0; i < 4; i++) {
 			if (ActiveHand[i] != null) {
 				indexCounter++;
-				if (cardOrder == indexCounter) {
+				if (selectedCardIndex == indexCounter) {
+					selectedCard = ActiveHand[i];
 					ActiveHand[i] = null;
 					break;
-				} 
+				}
 
 			}
 		}
-	
+		
+		return selectedCard;
+
 	}
 
-	public void PlayHand(int cardOrder) {
+	public Card PlayHand(int selectedCardIndex, Card topCard) {
 
-		RemoveCardFromActiveHand(cardOrder);
+		return RemoveCardFromActiveHand(selectedCardIndex);
+
+	}
 	
-		
+
+//For computer
+	public Card PlayHand(Card topCard)  {
+
+		int selectedCardIndex = FindBestCardToPlay(topCard);
+		return RemoveCardFromActiveHand(selectedCardIndex);
+
+	}
+//For computer
+	private int FindBestCardToPlay(Card topCard) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

@@ -12,53 +12,92 @@ public class Game {
 		Player computer = new Player();
 		Card[] board = new Card[52];
 
-		int cutPoint = GetCutPointFromUser();
+		int cutPoint = GetCutPointFromUser(); // gets the cut point from user
 
 		// PrintDeck(gameDeck.getCards()); // CONTROL
 		// gameDeck.CutDeck(cutPoint); // Cards are ready to play CONTROL
 		// System.out.println("---"); // CONTROL
 		// PrintDeck(gameDeck.getCards()); // CONTROL
 
-		gameDeck.CutDeck(cutPoint);
-		PrintDeck(gameDeck.getCards()); // CONTROL
+		gameDeck.CutDeck(cutPoint); // cuts the deck
+		// PrintDeck(gameDeck.getCards()); // CONTROL
 
-		// Game-------------------------------
-		for (int hand = 1; hand <= 6; hand++) { //we will play the game until all cards(52) are used so game will last until 6th hand is dealed
+// Game-------------------------------
+		for (int hand = 1; hand <= 6; hand++) { // we will play the game until all cards(52) are used so game will last
+												// until 6th hand is played
 			System.out.println();
 			System.out.println("HAND" + hand);
-			System.out.println("---------------------------");
+			System.out.println("░░░░░░░░░░░░░");
+			Scanner scan = new Scanner(System.in);
+			Random rand = new Random();
 
-			DealHands(gameDeck.getCards(), player1, computer, board, hand);
+			DealHands(gameDeck.getCards(), player1, computer, board, hand); // deals hands before starting the game
 
-			for (int times = 1; times <= 4; times++) { // a player(computer and player1) have 4 cards so players will play cards for 4 times
+			for (int times = 1; times <= 4; times++) { // a player(computer and player1) have 4 cards so players will
+														// play cards for 4 times
 
-				PrintGameTable(board, computer, player1); //we  show the current table(before starting the hand and after playing a card) 
+				PrintGameTable(board, computer, player1); // we show the current table(before starting the hand and
+															// after playing a card)
 
-				Scanner scan = new Scanner(System.in);
-				Random rand = new Random();
+				System.out.println();
+				System.out.println("════════════════════════════════════════");
 				System.out.println("Choose one card to play:");
-				int cardOrder = scan.nextInt();
-				int randomCardOrder = rand.nextInt(4);
+				int selectedCardIndex = scan.nextInt();
 
-				player1.PlayHand(cardOrder);
-				computer.PlayHand(randomCardOrder);
+				int randomCardOrder = rand.nextInt(4 - times + 1) + 1;
 
+				Card topCard = GetTopCard(board); // gets top card of the board to show the player
+
+				Card selectedCard = player1.PlayHand(selectedCardIndex, topCard); // player1 selects a card to
+																					// play=selectedCard
+
+				EvaluatePlayedCard(player1, selectedCard, board, topCard); // Evaluates played card and determines what
+																			// will happen
+
+				topCard = GetTopCard(board); // gets the top card again to show the player
+
+				selectedCard = computer.PlayHand(randomCardOrder, topCard); // computer selects a card to play
+
+				EvaluatePlayedCard(computer, selectedCard, board, topCard); //// Evaluates played card and determines
+																			//// what will happen
 			}
 		}
 
-		/*
-		 * 
-		 * / * while (!gameDeck.IsAllCardsUsed()) {
-		 * 
-		 * DealHands();
-		 * 
-		 * PlayHands(players);
-		 * 
-		 * }
-		 * 
-		 * CalculatePoints(players);
-		 */
+		PrintGameTable(board, computer, player1); // after players have played the cards for all hands,shows the last
+													// current game table
 
+	}
+
+	private static void EvaluatePlayedCard(Player player, Card selectedCard, Card[] board, Card topCard) {
+		int boardLength = GetBoardLength(board);
+
+		if (!selectedCard.CardNumber.equals(topCard.CardNumber)) { // if top card's and the selected card's number is not
+																// equal,we add the selected card on
+																// the board
+
+			board[boardLength] = selectedCard;
+		}
+
+	}
+
+	private static Card GetTopCard(Card[] board) { // we need to see the top card to decide which card we should play
+
+		int boardLength = GetBoardLength(board); // we need to know the length of the board to see the last card on the
+													// board
+		return board[boardLength - 1]; // returns last card on the board
+	}
+
+	private static int GetBoardLength(Card[] board) { // we search for all the indexes of board.the first "i" that gives
+														// us the value null is the current length of the array.
+
+		for (int i = 0; i < board.length; i++) {
+			if (board[i] == null) {
+				return i;
+			}
+		}
+
+		return board.length; // if there is no null value, the length of the array is equal to the value we
+								// defined first.
 	}
 
 //Dealing Hands
@@ -90,6 +129,19 @@ public class Game {
 
 	}
 
+	public static Card[] AddCardsToBoard(Card[] board, Card[] ActiveHand, int cardOrder, int times) {
+		if (times == 1) {
+			int lastCardIndex = 3;
+			if (board[lastCardIndex].CardNumber != ActiveHand[cardOrder].CardNumber) {
+				lastCardIndex++;
+				board[lastCardIndex] = ActiveHand[cardOrder];
+
+			}
+
+		}
+		return board;
+	}
+
 //Getting CutPoint From User
 	public static int GetCutPointFromUser() {
 		Scanner scan = new Scanner(System.in);
@@ -111,11 +163,23 @@ public class Game {
 		System.out.println("█ █ █ █ Computer ");
 		computer.PrintActiveHand();
 		System.out.println();
+		System.out.println("════════════════════════════════════════");
 		System.out.println("█ █ █ █ BOARD ");
-		for (int i = 0; i < 4; i++) {
-			System.out.print(board[i].GetCardName() + "  ");
+
+		int boardLength = GetBoardLength(board);
+		for (int i = boardLength - 1; i >= 0; i--) {
+			if (board[i] != null) {
+
+				if (i == boardLength - 1) {
+					System.out.println(board[i].GetCardName() + "  ");
+				} else {
+					System.out.print(board[i].GetCardName() + "  ");
+				}
+			}
 		}
+
 		System.out.println();
+		System.out.println("════════════════════════════════════════");
 		System.out.println("█ █ █ █ YOU ");
 		player1.PrintActiveHand();
 
