@@ -51,15 +51,20 @@ public class Game {
 				Card selectedCard = player1.PlayHand(selectedCardIndex, topCard); // player1 selects a card to
 																					// play=selectedCard
 
-				EvaluatePlayedCard(player1, selectedCard, board, topCard); // Evaluates played card and determines what
-																			// will happen
+				EvaluatePlayedCard(player1, selectedCard, board, topCard); // Evaluates played card and
+																			// determines what
+				// will happen
 
 				topCard = GetTopCard(board); // gets the top card again to show the player
 
 				selectedCard = computer.PlayHand(randomCardOrder, topCard); // computer selects a card to play
 
-				EvaluatePlayedCard(computer, selectedCard, board, topCard); //// Evaluates played card and determines
-																			//// what will happen
+				EvaluatePlayedCard(computer, selectedCard, board, topCard); //// Evaluates played card and
+																			//// determines
+				//// what will happen
+
+				player1.PrintOwnedCards();
+				System.out.println("Pişti:" + player1.getPistiCount());
 			}
 		}
 
@@ -70,12 +75,53 @@ public class Game {
 
 	private static void EvaluatePlayedCard(Player player, Card selectedCard, Card[] board, Card topCard) {
 		int boardLength = GetBoardLength(board);
+		board[boardLength] = selectedCard;
 
-		if (!selectedCard.CardNumber.equals(topCard.CardNumber)) { // if top card's and the selected card's number is not
-																// equal,we add the selected card on
-																// the board
+		if (boardLength == 1 && selectedCard.CardNumber.equals(topCard.CardNumber)) {
+			System.out.println("PİŞTİ!!");
+			player.PistiCount++;
+			AddCardsToOwnedCards(player, board, player.OwnedCards);
+			RemoveCardsFromBoard(board);
+		}
 
-			board[boardLength] = selectedCard;
+		if (topCard == null) {
+			board[0] = selectedCard;
+			return;
+		}
+
+		if (topCard != null) {
+
+			if (selectedCard.CardNumber.equals(topCard.CardNumber) || selectedCard.CardNumber.equals("J")) {
+				AddCardsToOwnedCards(player, board, player.OwnedCards);
+				RemoveCardsFromBoard(board);
+
+			}
+
+		}
+	}
+
+	public static void AddCardsToOwnedCards(Player player, Card[] board, Card[] OwnedCards) {
+		int boardLength = GetBoardLength(board);
+		if (OwnedCards[0] == null) {
+			for (int i = 0; i < boardLength; i++) {
+				player.OwnedCards[i] = board[i];
+			}
+		} else {
+			int currentOwnedCardsLength = player.getOwnedCardsLength();
+			int boardIndex=0;
+			for (int i = currentOwnedCardsLength; i < currentOwnedCardsLength + boardLength; i++) {
+				player.OwnedCards[i] = board[boardIndex];
+				boardIndex++;
+			}
+		}
+
+	}
+
+	public static void RemoveCardsFromBoard(Card[] board) {
+		int boardLength = GetBoardLength(board);
+
+		for (int i = 0; i < boardLength; i++) {
+			board[i] = null;
 		}
 
 	}
@@ -83,8 +129,11 @@ public class Game {
 	private static Card GetTopCard(Card[] board) { // we need to see the top card to decide which card we should play
 
 		int boardLength = GetBoardLength(board); // we need to know the length of the board to see the last card on the
-													// board
-		return board[boardLength - 1]; // returns last card on the board
+		if (boardLength != 0) {
+
+			return board[boardLength - 1];
+		}
+		return null;
 	}
 
 	private static int GetBoardLength(Card[] board) { // we search for all the indexes of board.the first "i" that gives
