@@ -11,7 +11,7 @@ public class Game {
 		Player player1 = new Player();
 		Player computer = new Player();
 		Card[] board = new Card[52];
-
+		Player lastWinner = null;
 		int cutPoint = GetCutPointFromUser(); // gets the cut point from user
 
 		// PrintDeck(gameDeck.getCards()); // CONTROL
@@ -26,8 +26,8 @@ public class Game {
 		for (int hand = 1; hand <= 6; hand++) { // we will play the game until all cards(52) are used so game will last
 												// until 6th hand is played
 			System.out.println();
-			System.out.println("HAND" + hand);
-			System.out.println("░░░░░░░░░░░░░");
+			System.out.println("HAND" + hand + "⛿");
+
 			Scanner scan = new Scanner(System.in);
 			Random rand = new Random();
 
@@ -43,37 +43,45 @@ public class Game {
 				System.out.println("════════════════════════════════════════");
 				System.out.println("Choose one card to play:");
 				int selectedCardIndex = scan.nextInt();
+				//CheckSelectedIndex(selectedCardIndex);
 
 				int randomCardOrder = rand.nextInt(4 - times + 1) + 1;
 
-				Card topCard = GetTopCard(board); // gets top card of the board to show the player
+				Card topCard = GetTopCard(board);
 
-				Card selectedCard = player1.PlayHand(selectedCardIndex, topCard); // player1 selects a card to
-																					// play=selectedCard
+				Card selectedCard = player1.PlayHand(selectedCardIndex, topCard);
 
-				EvaluatePlayedCard(player1, selectedCard, board, topCard); // Evaluates played card and
-																			// determines what
-				// will happen
+				EvaluatePlayedCard(player1, lastWinner, selectedCard, board, topCard);
 
-				topCard = GetTopCard(board); // gets the top card again to show the player
+				topCard = GetTopCard(board);
 
-				selectedCard = computer.PlayHand(randomCardOrder, topCard); // computer selects a card to play
+				selectedCard = computer.PlayHand(randomCardOrder, topCard);
 
-				EvaluatePlayedCard(computer, selectedCard, board, topCard); //// Evaluates played card and
-																			//// determines
-				//// what will happen
+				EvaluatePlayedCard(computer, lastWinner, selectedCard, board, topCard);
 
+				CheckLastBoard(board, times, hand, lastWinner); // For last hand
 				player1.PrintOwnedCards();
 				System.out.println("Pişti:" + player1.getPistiCount());
 			}
 		}
 
-		PrintGameTable(board, computer, player1); // after players have played the cards for all hands,shows the last
-													// current game table
+		System.out.println("Game is finished");
+		PrintGameTable(board, computer, player1);
 
 	}
 
-	private static void EvaluatePlayedCard(Player player, Card selectedCard, Card[] board, Card topCard) {
+	public static int CheckSelectedIndex(int selectedCardIndex) {
+		Scanner scan = new Scanner(System.in);
+		while (!(selectedCardIndex < 5) && !(selectedCardIndex > 0)) {
+			System.out.println("Choose one card to play again:");
+			selectedCardIndex = scan.nextInt();
+		}
+		return selectedCardIndex;
+	}
+
+	private static Player EvaluatePlayedCard(Player player, Player lastWinner, Card selectedCard, Card[] board,
+			Card topCard) {
+
 		int boardLength = GetBoardLength(board);
 		board[boardLength] = selectedCard;
 
@@ -82,11 +90,15 @@ public class Game {
 			player.PistiCount++;
 			AddCardsToOwnedCards(player, board, player.OwnedCards);
 			RemoveCardsFromBoard(board);
+			player = lastWinner;
+			return lastWinner;
 		}
 
 		if (topCard == null) {
 			board[0] = selectedCard;
-			return;
+			player = lastWinner;
+			return lastWinner;
+
 		}
 
 		if (topCard != null) {
@@ -94,8 +106,20 @@ public class Game {
 			if (selectedCard.CardNumber.equals(topCard.CardNumber) || selectedCard.CardNumber.equals("J")) {
 				AddCardsToOwnedCards(player, board, player.OwnedCards);
 				RemoveCardsFromBoard(board);
-
+				player = lastWinner;
+				return lastWinner;
 			}
+
+		}
+		return lastWinner;
+	}
+
+	// Checks table and add last cards on the board to the last player who got cards
+	// from board.
+	public static void CheckLastBoard(Card[] board, int times, int hand, Player lastWinner) {
+		int boardLength = GetBoardLength(board);
+		if (times == 4 && hand == 6 && boardLength != 0) {
+			AddCardsToOwnedCards(lastWinner, board, lastWinner.OwnedCards);
 
 		}
 	}
@@ -108,7 +132,7 @@ public class Game {
 			}
 		} else {
 			int currentOwnedCardsLength = player.getOwnedCardsLength();
-			int boardIndex=0;
+			int boardIndex = 0;
 			for (int i = currentOwnedCardsLength; i < currentOwnedCardsLength + boardLength; i++) {
 				player.OwnedCards[i] = board[boardIndex];
 				boardIndex++;
@@ -209,27 +233,28 @@ public class Game {
 //Printing ActiveHand
 	public static void PrintGameTable(Card[] board, Player computer, Player player1) {
 		System.out.println();
-		System.out.println("█ █ █ █ Computer ");
+		System.out.print("Computer ➤  ");
 		computer.PrintActiveHand();
 		System.out.println();
 		System.out.println("════════════════════════════════════════");
-		System.out.println("█ █ █ █ BOARD ");
+		System.out.println("❮ BOARD ❯");
 
 		int boardLength = GetBoardLength(board);
 		for (int i = boardLength - 1; i >= 0; i--) {
 			if (board[i] != null) {
 
 				if (i == boardLength - 1) {
-					System.out.println(board[i].GetCardName() + "  ");
+					System.out.println("█" + board[i].GetCardName() + "  ");
+					System.out.println();
 				} else {
-					System.out.print(board[i].GetCardName() + "  ");
+					System.out.print("█" + board[i].GetCardName() + "  ");
 				}
 			}
 		}
 
 		System.out.println();
 		System.out.println("════════════════════════════════════════");
-		System.out.println("█ █ █ █ YOU ");
+		System.out.print(" YOU ➤  ");
 		player1.PrintActiveHand();
 
 	}

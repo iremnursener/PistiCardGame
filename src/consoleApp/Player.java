@@ -31,7 +31,7 @@ public class Player {
 
 		for (int i = 0; i < 4; i++) {
 			if (ActiveHand[i] != null) {
-				System.out.print(ActiveHand[i].GetCardName() + "  ");
+				System.out.print("█"+ ActiveHand[i].GetCardName() + "  ");
 			}
 		}
 	}
@@ -41,7 +41,7 @@ public class Player {
 		System.out.print("Your owned cards:  ");
 		for (int i = 0; i < OwnedCardsLength; i++) {
 
-			System.out.print(OwnedCards[i].GetCardName() + "  ");
+			System.out.print("█" + OwnedCards[i].GetCardName() + "  ");
 
 		}
 	}
