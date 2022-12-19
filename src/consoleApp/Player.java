@@ -3,20 +3,24 @@ package consoleApp;
 import java.util.Scanner;
 
 public class Player {
-    public int PistiCount;
+	public String Name;
+	public int PistiCount;
 	public Card[] ActiveHand;
 	public Card[] OwnedCards;
 	public int Point;
 
-	public Player() {
+	public Player(String name) {
 		this.ActiveHand = new Card[4];
 		this.OwnedCards = new Card[52];
-		this.PistiCount=0;
+		this.PistiCount = 0;
+		Name=name;
 	}
+
 	public int getPistiCount() {
 
 		return this.PistiCount;
 	}
+	
 
 	public Card[] getOwnedCards() {
 
@@ -31,14 +35,14 @@ public class Player {
 
 		for (int i = 0; i < 4; i++) {
 			if (ActiveHand[i] != null) {
-				System.out.print("█"+ ActiveHand[i].GetCardName() + "  ");
+				System.out.print("█" + ActiveHand[i].GetCardName() + "  ");
 			}
 		}
 	}
 
-	public void PrintOwnedCards() {
+	public void PrintOwnedCards(Player player) {
 		int OwnedCardsLength = getOwnedCardsLength();
-		System.out.print("Your owned cards:  ");
+		System.out.print(player.Name+"'s owned cards:  ");
 		for (int i = 0; i < OwnedCardsLength; i++) {
 
 			System.out.print("█" + OwnedCards[i].GetCardName() + "  ");
