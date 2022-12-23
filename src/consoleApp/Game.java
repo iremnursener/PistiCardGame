@@ -26,7 +26,7 @@ public class Game {
 		gameDeck.CutDeck(cutPoint); // cuts the deck
 		// PrintDeck(gameDeck.getCards()); // CONTROL
 
-// Game-------------------------------
+// Game Starts-------------------------------
 		for (int hand = 1; hand <= 6; hand++) { // we will play the game until all cards(52) are used so game will last
 												// until 6th hand is played
 			System.out.println();
@@ -46,7 +46,6 @@ public class Game {
 				System.out.println("════════════════════════════════════════");
 				System.out.println("Choose one card to play:");
 				int selectedCardIndex = scan.nextInt();
-				int randomCardOrder = rand.nextInt(4 - times + 1) + 1;
 
 				Card topCard = GetTopCard(board);
 
@@ -58,7 +57,7 @@ public class Game {
 
 				topCard = GetTopCard(board);
 
-				selectedCard = computer.PlayHand(randomCardOrder, topCard);
+				selectedCard = computer.PlayHand(topCard);
 
 				isWinner = EvaluatePlayedCard(computer, selectedCard, board, topCard);
 				if (isWinner == true) {
@@ -69,7 +68,7 @@ public class Game {
 				System.out.println("Pişti:" + player1.getPistiCount());
 			}
 		}
-//Game is finished
+//Game is finished-----------------------------------------------------------
 		System.out.println("🏁Game is finished🏁");
 		System.out.println("►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►");
 		System.out.println("Last winner is " + lastWinner.Name);
@@ -81,7 +80,7 @@ public class Game {
 		System.out.println("Pişti:" + computer.getPistiCount());
 
 		PrintGameTable(board, computer, player1);
-
+//---------------------------------------------------------------------------
 	}
 
 	private static Boolean EvaluatePlayedCard(Player player, Card selectedCard, Card[] board, Card topCard) {
@@ -92,7 +91,8 @@ public class Game {
 		if (boardLength == 1 && selectedCard.CardNumber.equals(topCard.CardNumber)) {
 			System.out.println("PİŞTİ!!");
 			player.PistiCount++;
-			AddCardsToOwnedCards(player, board, player.OwnedCards);
+			// AddCardsToOwnedCards(player, board, player.OwnedCards); //we do not add pişti
+			// cards to owned cards but increase pişti counter
 			RemoveCardsFromBoard(board);
 			isWinner = true;
 

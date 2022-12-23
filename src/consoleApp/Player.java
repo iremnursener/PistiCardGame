@@ -1,5 +1,6 @@
 package consoleApp;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class Player {
@@ -13,14 +14,13 @@ public class Player {
 		this.ActiveHand = new Card[4];
 		this.OwnedCards = new Card[52];
 		this.PistiCount = 0;
-		Name=name;
+		Name = name;
 	}
 
 	public int getPistiCount() {
 
 		return this.PistiCount;
 	}
-	
 
 	public Card[] getOwnedCards() {
 
@@ -29,6 +29,19 @@ public class Player {
 
 	public Card[] getActiveHand() {
 		return this.ActiveHand;
+	}
+
+	public int getActiveHandLength() {
+		int lengthCounter = 0;
+		for (int i = 0; i < ActiveHand.length; i++) {
+
+			if (ActiveHand[i] != null) {
+				lengthCounter++;
+
+			}
+		}
+
+		return lengthCounter;
 	}
 
 	public void PrintActiveHand() {
@@ -42,7 +55,7 @@ public class Player {
 
 	public void PrintOwnedCards(Player player) {
 		int OwnedCardsLength = getOwnedCardsLength();
-		System.out.print(player.Name+"'s owned cards:  ");
+		System.out.print(player.Name + "'s owned cards:  ");
 		for (int i = 0; i < OwnedCardsLength; i++) {
 
 			System.out.print("█" + OwnedCards[i].GetCardName() + "  ");
@@ -69,6 +82,7 @@ public class Player {
 
 	}
 
+//For player1
 	public Card PlayHand(int selectedCardIndex, Card topCard) {
 
 		return RemoveCardFromActiveHand(selectedCardIndex);
@@ -89,15 +103,81 @@ public class Player {
 //For computer
 	public Card PlayHand(Card topCard) {
 
-		int selectedCardIndex = FindBestCardToPlay(topCard);
-		return RemoveCardFromActiveHand(selectedCardIndex);
+		int selectedCardOrder = FindBestCardToPlay(topCard);
+		return RemoveCardFromActiveHand(selectedCardOrder);
 
 	}
 
+//For computer to find best card to play
+	public int FindBestCardToPlay(Card topCard) { // computer finds the best index to play
+		Random rand = new Random();
+		int activeHandLength = getActiveHandLength();
+		int randomCardOrder = rand.nextInt(activeHandLength) + 1;
+
+		if (topCard != null) {
+			return thereIsATopcard(topCard, randomCardOrder);
+		} else {
+			return thereIsNoTopcard(randomCardOrder);
+
+		}
+
+	}
+
+//If there is a topcard
+	public int thereIsATopcard(Card topCard, int randomCardOrder) {
+		for (int i = 0; i < ActiveHand.length; i++) {
+			if (ActiveHand[i] != null) {
+				if (ActiveHand[i].CardNumber.equals(topCard.CardNumber)) {
+					return GetOrderFromIndex(i);
+				} else if (ActiveHand[i].CardNumber.equals("J")) {
+					return GetOrderFromIndex(i);
+				}
+			}
+		}
+		return randomCardOrder;
+	}
+
+//Checks if all cards are J
+	public boolean isAllCardsJ() {
+		boolean notJ = false;
+		for (int i = 0; i < ActiveHand.length; i++) {
+			if (ActiveHand[i] != null && !ActiveHand[i].CardNumber.equals("J")) {
+				notJ = true;
+				break;
+			}
+		}
+
+		return notJ;
+	}
+
+// If there is no topcard
+	public int thereIsNoTopcard(int randomCardOrder) {
+		boolean notJ = isAllCardsJ();
+		if (notJ == false) {
+			return randomCardOrder;
+		} else {
+			for (int i = 0; i < ActiveHand.length; i++) {
+
+				if (ActiveHand[i] != null && !ActiveHand[i].CardNumber.equals("J")) {
+					return GetOrderFromIndex(i);
+
+				}
+
+			}
+		}
+return 0;
+	}
+
 //For computer
-	private int FindBestCardToPlay(Card topCard) {
-		// TODO Auto-generated method stub
-		return 0;
+	private int GetOrderFromIndex(int index) {
+		int order = 0;
+		for (int i = index; i >= 0; i--) {
+			if (ActiveHand[i] != null) {
+				order++;
+			}
+		}
+
+		return order;
 	}
 
 }
