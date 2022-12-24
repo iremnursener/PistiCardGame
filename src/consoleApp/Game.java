@@ -1,9 +1,17 @@
 package consoleApp;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Formatter;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Game {
+
+	public static String FileName = "leaderboard.txt";
 
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
@@ -89,15 +97,125 @@ public class Game {
 		int point1 = CalculatePoints(player1, player1.OwnedCards, player1.PistiCards, player1.totalPoint);
 		System.out.println();
 		int point2 = CalculatePoints(computer, computer.OwnedCards, computer.PistiCards, computer.totalPoint);
+		Player winner = null;
+		int winnerPoint = 0;
 		if (point1 > point2) {
+			winner = player1;
+			winnerPoint = point1;
 			System.out.println("THE WINNER IS  " + player1.Name);
 		} else if (point1 < point2) {
+			winner = computer;
+			winnerPoint = point2;
 			System.out.println("THE WINNER IS COMPUTER");
 		} else {
 			System.out.println("DEUCE");
 		}
 
+// Writing to a file
+		SavePlayerToLeaderboard(winner);
 //---------------------------------------------------------------------------
+	}
+
+	private static File GetLeaderboardFile() {
+		try {
+			File file = new File(FileName);
+			if (file.createNewFile()) {
+				System.out.println("File created: " + file.getName());
+			} else {
+				System.out.println("File already exists.");
+			}
+
+			return file;
+		} catch (IOException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private static Player[] LoadLeaderboardFromFile() {
+		Player[] leaderPlayers = new Player[10];
+		int playerIndex = 0;
+		File leaderboardFile = GetLeaderboardFile();
+		try {
+			File leaderFile = new File(FileName);
+			Scanner reader = new Scanner(leaderFile);
+			while (reader.hasNextLine()) {
+				String name = reader.nextLine();
+
+				if (!name.equals("")) {
+					int point = reader.nextInt();
+					Player player = new Player(name);
+					player.totalPoint = point;
+					leaderPlayers[playerIndex] = player;
+					playerIndex++;
+				}
+			}
+			reader.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
+		return leaderPlayers;
+	}
+
+	private static void SavePlayerToLeaderboard(Player currentPlayer) {
+
+		Player[] playersInFile = LoadLeaderboardFromFile();
+		Player[] newLeaderboard = new Player[10];
+		int length = GetArrayLength(playersInFile);
+		int indexToAdd = length;
+
+		for (int i = 0; i < playersInFile.length - 1; i++) {
+			if (playersInFile[i] != null && playersInFile[i].totalPoint > currentPlayer.totalPoint) {
+				indexToAdd = i + 1;
+			}
+		}
+
+		if (indexToAdd > playersInFile.length - 1) {
+			return;
+		}
+
+		for (int i = 0; i < indexToAdd; i++) {
+			newLeaderboard[i] = playersInFile[i];
+		}
+
+		newLeaderboard[indexToAdd] = currentPlayer;
+
+		for (int i = indexToAdd; i < playersInFile.length - 1; i++) {
+			newLeaderboard[i+ 1] = playersInFile[i];
+		}
+
+		WriteToFile(newLeaderboard);
+	}
+
+	private static int GetArrayLength(Player[] array) {
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] == null) {
+				return i;
+			}
+		}
+
+		return array.length;
+	}
+
+	private static void WriteToFile(Player[] newLeaderboard) {
+		try {
+			FileWriter fileWriter = new FileWriter(FileName);
+
+			for (int i = 0; i < newLeaderboard.length; i++) {
+				if (newLeaderboard[i] != null) {
+					fileWriter.append(newLeaderboard[i].Name + "\n");
+					fileWriter.append(newLeaderboard[i].totalPoint + "\n");
+				}
+			}
+
+			fileWriter.close();
+			System.out.println("Successfully wrote to the file.");
+		} catch (IOException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
 	}
 
 	private static Boolean EvaluatePlayedCard(Player player, Card selectedCard, Card[] board, Card topCard,
@@ -317,23 +435,5 @@ public class Game {
 		System.out.println(player.Name + "'s total point :" + player.totalPoint);
 		return player.totalPoint;
 	}
-
-	/*
-	 * private static void CalculatePoints(Player[] players) {
-	 * 
-	 * for (int i = 0; i < players.length; i++) { Player player = players[i];
-	 * 
-	 * int point = CalculatePlayerPoint(player.OwnedCards);
-	 * 
-	 * player.Point = point; } }
-	 * 
-	 * private static int CalculatePlayerPoint(Card[] ownedCards) {
-	 * 
-	 * return 0; }
-	 * 
-	 * private static void playHands(Player[] players) {
-	 * 
-	 * }
-	 */
 
 }
