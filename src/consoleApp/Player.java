@@ -8,11 +8,13 @@ public class Player {
 	public int PistiCount;
 	public Card[] ActiveHand;
 	public Card[] OwnedCards;
+	public Card[] PistiCards;
 	public int Point;
 
 	public Player(String name) {
 		this.ActiveHand = new Card[4];
 		this.OwnedCards = new Card[52];
+		this.PistiCards=new Card[52];
 		this.PistiCount = 0;
 		Name = name;
 	}
@@ -20,6 +22,10 @@ public class Player {
 	public int getPistiCount() {
 
 		return this.PistiCount;
+	}
+	public Card[] getPistiCards() {
+
+		return this.PistiCards;
 	}
 
 	public Card[] getOwnedCards() {
@@ -43,6 +49,20 @@ public class Player {
 
 		return lengthCounter;
 	}
+	
+	public int getPistiCardsLength() {
+		int lengthCounter = 0;
+		for (int i = 0; i < PistiCards.length; i++) {
+
+			if (PistiCards[i] != null) {
+				lengthCounter++;
+
+			}
+		}
+
+		return lengthCounter;
+	}
+	
 
 	public void PrintActiveHand() {
 
@@ -59,6 +79,16 @@ public class Player {
 		for (int i = 0; i < OwnedCardsLength; i++) {
 
 			System.out.print("█" + OwnedCards[i].GetCardName() + "  ");
+
+		}
+	}
+	
+	public void PrintPistiCards(Player player) {
+		int pistiCardsLength=getPistiCardsLength();
+		System.out.print(player.Name + "'s pisti cards:  ");
+		for (int i = 0; i < pistiCardsLength; i++) {
+
+			System.out.print("█" + PistiCards[i].GetCardName() + "  ");
 
 		}
 	}

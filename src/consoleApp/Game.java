@@ -50,7 +50,8 @@ public class Game {
 				Card topCard = GetTopCard(board);
 
 				Card selectedCard = player1.PlayHand(selectedCardIndex, topCard);
-				Boolean isWinner = EvaluatePlayedCard(player1, selectedCard, board, topCard);
+				Card[] pistiCards=player1.getPistiCards();
+				Boolean isWinner = EvaluatePlayedCard(player1, selectedCard, board, topCard,pistiCards);
 				if (isWinner == true) {
 					lastWinner = player1;
 				}
@@ -58,8 +59,8 @@ public class Game {
 				topCard = GetTopCard(board);
 
 				selectedCard = computer.PlayHand(topCard);
-
-				isWinner = EvaluatePlayedCard(computer, selectedCard, board, topCard);
+				pistiCards=computer.getPistiCards();
+				isWinner = EvaluatePlayedCard(computer, selectedCard, board, topCard,pistiCards);
 				if (isWinner == true) {
 					lastWinner = computer;
 				}
@@ -76,14 +77,18 @@ public class Game {
 
 		player1.PrintOwnedCards(player1);
 		System.out.println("Pişti:" + player1.getPistiCount());
+		player1.PrintPistiCards(player1);
+		System.out.println(); //Space
 		computer.PrintOwnedCards(computer);
 		System.out.println("Pişti:" + computer.getPistiCount());
+		computer.PrintPistiCards(computer);
 
 		PrintGameTable(board, computer, player1);
 //---------------------------------------------------------------------------
 	}
 
-	private static Boolean EvaluatePlayedCard(Player player, Card selectedCard, Card[] board, Card topCard) {
+	private static Boolean EvaluatePlayedCard(Player player, Card selectedCard, Card[] board, Card topCard,
+			Card[] PistiCards) {
 		Boolean isWinner = false;
 		int boardLength = GetBoardLength(board);
 		board[boardLength] = selectedCard;
@@ -91,8 +96,7 @@ public class Game {
 		if (boardLength == 1 && selectedCard.CardNumber.equals(topCard.CardNumber)) {
 			System.out.println("PİŞTİ!!");
 			player.PistiCount++;
-			// AddCardsToOwnedCards(player, board, player.OwnedCards); //we do not add pişti
-			// cards to owned cards but increase pişti counter
+			AddCardsToPistiCards(player, PistiCards, player.PistiCount, board);
 			RemoveCardsFromBoard(board);
 			isWinner = true;
 
@@ -139,6 +143,21 @@ public class Game {
 			}
 		}
 
+	}
+
+	public static void AddCardsToPistiCards(Player player, Card[] PistiCards, int PistiCount, Card[] board) {
+		if (PistiCards[0] == null) {
+			for (int i = 0; i < PistiCount * 2; i++) {
+				player.PistiCards[i] = board[i];
+			}
+		} else {
+			int currentLength = player.getPistiCardsLength();
+			int boardIndex = 0;
+			for (int i = currentLength; i < PistiCount * 2; i++) {
+				player.PistiCards[i] = board[boardIndex];
+				boardIndex++;
+			}
+		}
 	}
 
 	public static void RemoveCardsFromBoard(Card[] board) {
@@ -256,6 +275,10 @@ public class Game {
 		System.out.println("════════════════════════════════════════");
 		System.out.print(" YOU ➤  ");
 		player1.PrintActiveHand();
+
+	}
+
+	private static void CalculatePoints(Player player1, Player computer, Card[] OwnedCards) {
 
 	}
 
