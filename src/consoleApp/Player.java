@@ -9,7 +9,7 @@ public class Player {
 	public Card[] ActiveHand;
 	public Card[] OwnedCards;
 	public Card[] PistiCards;
-	public int Point;
+	public int totalPoint;
 
 	public Player(String name) {
 		this.ActiveHand = new Card[4];

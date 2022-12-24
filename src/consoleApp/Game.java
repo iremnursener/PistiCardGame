@@ -50,8 +50,8 @@ public class Game {
 				Card topCard = GetTopCard(board);
 
 				Card selectedCard = player1.PlayHand(selectedCardIndex, topCard);
-				Card[] pistiCards=player1.getPistiCards();
-				Boolean isWinner = EvaluatePlayedCard(player1, selectedCard, board, topCard,pistiCards);
+				Card[] pistiCards = player1.getPistiCards();
+				Boolean isWinner = EvaluatePlayedCard(player1, selectedCard, board, topCard, pistiCards);
 				if (isWinner == true) {
 					lastWinner = player1;
 				}
@@ -59,8 +59,8 @@ public class Game {
 				topCard = GetTopCard(board);
 
 				selectedCard = computer.PlayHand(topCard);
-				pistiCards=computer.getPistiCards();
-				isWinner = EvaluatePlayedCard(computer, selectedCard, board, topCard,pistiCards);
+				pistiCards = computer.getPistiCards();
+				isWinner = EvaluatePlayedCard(computer, selectedCard, board, topCard, pistiCards);
 				if (isWinner == true) {
 					lastWinner = computer;
 				}
@@ -78,12 +78,25 @@ public class Game {
 		player1.PrintOwnedCards(player1);
 		System.out.println("Pişti:" + player1.getPistiCount());
 		player1.PrintPistiCards(player1);
-		System.out.println(); //Space
+		System.out.println(); // Space
 		computer.PrintOwnedCards(computer);
 		System.out.println("Pişti:" + computer.getPistiCount());
 		computer.PrintPistiCards(computer);
 
 		PrintGameTable(board, computer, player1);
+		System.out.println();
+
+		int point1 = CalculatePoints(player1, player1.OwnedCards, player1.PistiCards, player1.totalPoint);
+		System.out.println();
+		int point2 = CalculatePoints(computer, computer.OwnedCards, computer.PistiCards, computer.totalPoint);
+		if (point1 > point2) {
+			System.out.println("THE WINNER IS  " + player1.Name);
+		} else if (point1 < point2) {
+			System.out.println("THE WINNER IS COMPUTER");
+		} else {
+			System.out.println("DEUCE");
+		}
+
 //---------------------------------------------------------------------------
 	}
 
@@ -278,8 +291,31 @@ public class Game {
 
 	}
 
-	private static void CalculatePoints(Player player1, Player computer, Card[] OwnedCards) {
+	private static int CalculatePoints(Player player, Card[] OwnedCards, Card[] PistiCards, int totalPoint) {
+		int currentOwnedCardsLength = player.getOwnedCardsLength();
+		int numberOfOwnedCards = currentOwnedCardsLength;
+		int pistiCardsPoint = (player.getPistiCount()) * 10;
+		int specialCardsPoints = 0;
+		int specialCardCounter = 0;
+		for (int i = 0; i < currentOwnedCardsLength; i++) {
+			if (player.OwnedCards[i].GetCardName().equals("♦10")) {
+				specialCardsPoints += 3;
+				specialCardCounter++;
+			}
+			if (player.OwnedCards[i].GetCardName().equals("♣2")) {
+				specialCardsPoints += 2;
+				specialCardCounter++;
+			}
 
+		}
+		int normalCardsNumber = numberOfOwnedCards - specialCardCounter; // normal cards are 1 point
+		player.totalPoint = pistiCardsPoint + specialCardsPoints + normalCardsNumber;
+
+		if (numberOfOwnedCards + player.PistiCount * 2 > 26) {
+			player.totalPoint += 3;
+		}
+		System.out.println(player.Name + "'s total point :" + player.totalPoint);
+		return player.totalPoint;
 	}
 
 	/*
