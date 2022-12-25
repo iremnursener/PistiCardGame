@@ -23,16 +23,22 @@ public class Game {
 		Player computer = new Player("Computer");
 		Card[] board = new Card[52];
 		Player lastWinner = null;
-		FileOperations operator=new FileOperations();
+		Boolean isWinner = null;
+		Card topCard = null;
+		Card selectedCard = null;
+		Card[] pistiCards = null;
 
-		int cutPoint = GetCutPointFromUser(); // gets the cut point from user
+		FileOperations operator = new FileOperations();
+
+		getCutPointFromUser(gameDeck); // checks the entered number is valid or not for the cut
+
+		// int cutPoint = GetCutPointFromUser(); // gets the cut point from user
 
 		// PrintDeck(gameDeck.getCards()); // CONTROL
 		// gameDeck.CutDeck(cutPoint); // Cards are ready to play CONTROL
 		// System.out.println("---"); // CONTROL
 		// PrintDeck(gameDeck.getCards()); // CONTROL
 
-		gameDeck.CutDeck(cutPoint); // cuts the deck
 		// PrintDeck(gameDeck.getCards()); // CONTROL
 
 // Game Starts-------------------------------
@@ -54,13 +60,26 @@ public class Game {
 				System.out.println();
 				System.out.println("════════════════════════════════════════");
 				System.out.println("Choose one card to play:");
-				int selectedCardIndex = scan.nextInt();
 
-				Card topCard = GetTopCard(board);
+				int a = 0;
+				for (int i = 0; i < a + 1; i++) {
 
-				Card selectedCard = player1.PlayHand(selectedCardIndex, topCard);
-				Card[] pistiCards = player1.getPistiCards();
-				Boolean isWinner = EvaluatePlayedCard(player1, selectedCard, board, topCard, pistiCards);
+					try {
+						int selectedCardIndex = scan.nextInt();
+
+						topCard = GetTopCard(board);
+
+						selectedCard = player1.PlayHand(selectedCardIndex, topCard);
+						pistiCards = player1.getPistiCards();
+						isWinner = EvaluatePlayedCard(player1, selectedCard, board, topCard, pistiCards);
+
+					} catch (Exception e) {
+						System.out.println("Something went wrong.Please enter a number between 1-"
+								+ player1.getActiveHandLength());
+						a++;
+					}
+				}
+
 				if (isWinner == true) {
 					lastWinner = player1;
 				}
@@ -113,111 +132,24 @@ public class Game {
 		}
 
 // Saving top scores to a file
-		//SavePlayerToLeaderboard(winner);
 		operator.SavePlayerToLeaderboard(winner);
 //---------------------------------------------------------------------------
 	}
 
-	private static File GetLeaderboardFile() {
-		try {
-			File file = new File(FileName);
-			if (file.createNewFile()) {
-				System.out.println("File created: " + file.getName());
-			} else {
-				System.out.println("File already exists.");
-			}
+	public static void getCutPointFromUser(Deck gameDeck) {
+		int a = 0;
+		for (int i = 0; i < a + 1; i++) {
+			int cutPoint = GetCutPointFromUser();
+			try {
 
-			return file;
-		} catch (IOException e) {
-			System.out.println("An error occurred.");
-			e.printStackTrace();
-			return null;
-		}
-	}
+				gameDeck.CutDeck(cutPoint);
 
-	private static Player[] LoadLeaderboardFromFile() {
-		Player[] leaderPlayers = new Player[10];
-		int playerIndex = 0;
-		File leaderboardFile = GetLeaderboardFile();
-		try {
-			File leaderFile = new File(FileName);
-			Scanner reader = new Scanner(leaderFile);
-			while (reader.hasNextLine()) {
-				String name = reader.nextLine();
-
-				if (!name.equals("")) {
-					int point = reader.nextInt();
-					Player player = new Player(name);
-					player.totalPoint = point;
-					leaderPlayers[playerIndex] = player;
-					playerIndex++;
-				}
-			}
-			reader.close();
-		} catch (FileNotFoundException e) {
-			System.out.println("An error occurred.");
-			e.printStackTrace();
-		}
-		return leaderPlayers;
-	}
-
-	private static void SavePlayerToLeaderboard(Player currentPlayer) {
-
-		Player[] playersInFile = LoadLeaderboardFromFile();
-		Player[] newLeaderboard = new Player[10];
-		int length = GetArrayLength(playersInFile);
-		int indexToAdd = length;
-
-		for (int i = 0; i < playersInFile.length - 1; i++) {
-			if (playersInFile[i] != null && playersInFile[i].totalPoint > currentPlayer.totalPoint) {
-				indexToAdd = i + 1;
+			} catch (Exception e) {
+				System.out.println("Something went wrong.Enter a number between 1-52");
+				a++;
 			}
 		}
 
-		if (indexToAdd > playersInFile.length - 1) {
-			return;
-		}
-
-		for (int i = 0; i < indexToAdd; i++) {
-			newLeaderboard[i] = playersInFile[i];
-		}
-
-		newLeaderboard[indexToAdd] = currentPlayer;
-
-		for (int i = indexToAdd; i < playersInFile.length - 1; i++) {
-			newLeaderboard[i+ 1] = playersInFile[i];
-		}
-
-		WriteToFile(newLeaderboard);
-	}
-
-	private static int GetArrayLength(Player[] array) {
-		for (int i = 0; i < array.length; i++) {
-			if (array[i] == null) {
-				return i;
-			}
-		}
-
-		return array.length;
-	}
-
-	private static void WriteToFile(Player[] newLeaderboard) {
-		try {
-			FileWriter fileWriter = new FileWriter(FileName);
-
-			for (int i = 0; i < newLeaderboard.length; i++) {
-				if (newLeaderboard[i] != null) {
-					fileWriter.append(newLeaderboard[i].Name + "\n");
-					fileWriter.append(newLeaderboard[i].totalPoint + "\n");
-				}
-			}
-
-			fileWriter.close();
-			System.out.println("Successfully wrote to the file.");
-		} catch (IOException e) {
-			System.out.println("An error occurred.");
-			e.printStackTrace();
-		}
 	}
 
 	private static Boolean EvaluatePlayedCard(Player player, Card selectedCard, Card[] board, Card topCard,
