@@ -10,11 +10,20 @@ public class Deck {
 		this.cards = InitializeDeck();
 		ShuffleDeck(cards, 10000);
 	}
-	
+
 	public Card[] getCards() {
 		return this.cards;
 	}
 
+	private Card[] InitializeDeck() {
+		this.cards = new Card[52];
+
+		for (int i = 0; i < 52; i++) {
+			this.cards[i] = new Card(i);
+		}
+
+		return this.cards;
+	}
 
 	public void CutDeck(int cutPoint) {
 		Card[] newCards = new Card[cards.length];
@@ -30,6 +39,14 @@ public class Deck {
 		this.cards = newCards;
 	}
 
+	private static Card[] SwapCards(Card[] cards, int from, int to) {
+		Card tempCard = cards[to];
+		cards[to] = cards[from];
+		cards[from] = tempCard;
+
+		return cards;
+	}
+
 	private Card[] ShuffleDeck(Card[] cards, int shuffleCount) {
 		Random r = new Random();
 
@@ -42,33 +59,8 @@ public class Deck {
 		return cards;
 	}
 
-	private static Card[] SwapCards(Card[] cards, int from, int to) {
-		Card tempCard = cards[to];
-		cards[to] = cards[from];
-		cards[from] = tempCard;
-
-		return cards;
-	}
-
-	private Card[] InitializeDeck() {
-		this.cards = new Card[52];
-
-		for (int i = 0; i < 52; i++) {
-			this.cards[i] = new Card(i);
-		}
-
-		return this.cards;
-	}
-	
-	
-	
-	
-	
-
-
-
 	public boolean IsAllCardsUsed() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 

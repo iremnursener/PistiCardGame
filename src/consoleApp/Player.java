@@ -4,12 +4,12 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Player {
-	public String Name;
-	public int PistiCount;
-	public Card[] ActiveHand;
-	public Card[] OwnedCards;
-	public Card[] PistiCards;
-	public int totalPoint;
+	private String Name;
+	private int PistiCount;
+	private Card[] ActiveHand;
+	private Card[] OwnedCards;
+	private Card[] PistiCards;
+	private int totalPoint;
 
 	public Player(String name) {
 		this.ActiveHand = new Card[4];
@@ -17,6 +17,9 @@ public class Player {
 		this.PistiCards=new Card[52];
 		this.PistiCount = 0;
 		Name = name;
+	}
+	public String getName() {
+		return this.Name;
 	}
 
 	public int getPistiCount() {
@@ -61,6 +64,10 @@ public class Player {
 		}
 
 		return lengthCounter;
+	}
+	
+	public void increasePistiCount() {
+		this.PistiCount+=1;
 	}
 	
 
@@ -157,9 +164,9 @@ public class Player {
 	public int thereIsATopcard(Card topCard, int randomCardOrder) {
 		for (int i = 0; i < ActiveHand.length; i++) {
 			if (ActiveHand[i] != null) {
-				if (ActiveHand[i].CardNumber.equals(topCard.CardNumber)) {
+				if (ActiveHand[i].getCardNumber().equals(topCard.getCardNumber())) {
 					return GetOrderFromIndex(i);
-				} else if (ActiveHand[i].CardNumber.equals("J")) {
+				} else if (ActiveHand[i].getCardNumber().equals("J")) {
 					return GetOrderFromIndex(i);
 				}
 			}
@@ -171,7 +178,7 @@ public class Player {
 	public boolean isAllCardsJ() {
 		boolean notJ = false;
 		for (int i = 0; i < ActiveHand.length; i++) {
-			if (ActiveHand[i] != null && !ActiveHand[i].CardNumber.equals("J")) {
+			if (ActiveHand[i] != null && !ActiveHand[i].getCardNumber().equals("J")) {
 				notJ = true;
 				break;
 			}
@@ -188,7 +195,7 @@ public class Player {
 		} else {
 			for (int i = 0; i < ActiveHand.length; i++) {
 
-				if (ActiveHand[i] != null && !ActiveHand[i].CardNumber.equals("J")) {
+				if (ActiveHand[i] != null && !ActiveHand[i].getCardNumber().equals("J")) {
 					return GetOrderFromIndex(i);
 
 				}
@@ -208,6 +215,14 @@ return 0;
 		}
 
 		return order;
+	}
+
+	public int getTotalPoint() {
+		return totalPoint;
+	}
+
+	public void setTotalPoint(int totalPoint) {
+		this.totalPoint = totalPoint;
 	}
 
 }

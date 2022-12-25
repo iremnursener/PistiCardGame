@@ -100,7 +100,7 @@ public class Game {
 //Game is finished-----------------------------------------------------------
 		System.out.println("🏁Game is finished🏁");
 		System.out.println("►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►");
-		System.out.println("Last winner is " + lastWinner.Name);
+		System.out.println("Last winner is " + lastWinner.getName());
 		CheckLastBoard(board, lastWinner);
 
 		player1.PrintOwnedCards(player1);
@@ -114,15 +114,15 @@ public class Game {
 		PrintGameTable(board, computer, player1);
 		System.out.println();
 
-		int point1 = CalculatePoints(player1, player1.OwnedCards, player1.PistiCards, player1.totalPoint);
+		int point1 = CalculatePoints(player1, player1.getOwnedCards(), player1.getPistiCards(), player1.getTotalPoint());
 		System.out.println();
-		int point2 = CalculatePoints(computer, computer.OwnedCards, computer.PistiCards, computer.totalPoint);
+		int point2 = CalculatePoints(computer, computer.getOwnedCards(), computer.getPistiCards(), computer.getTotalPoint());
 		Player winner = null;
 		int winnerPoint = 0;
 		if (point1 > point2) {
 			winner = player1;
 			winnerPoint = point1;
-			System.out.println("THE WINNER IS  " + player1.Name);
+			System.out.println("THE WINNER IS  " + player1.getName());
 		} else if (point1 < point2) {
 			winner = computer;
 			winnerPoint = point2;
@@ -139,11 +139,10 @@ public class Game {
 	public static void getCutPointFromUser(Deck gameDeck) {
 		int a = 0;
 		for (int i = 0; i < a + 1; i++) {
-			int cutPoint = GetCutPointFromUser();
 			try {
 
+				int cutPoint = GetCutPointFromUser();
 				gameDeck.CutDeck(cutPoint);
-
 			} catch (Exception e) {
 				System.out.println("Something went wrong.Enter a number between 1-52");
 				a++;
@@ -158,10 +157,10 @@ public class Game {
 		int boardLength = GetBoardLength(board);
 		board[boardLength] = selectedCard;
 
-		if (boardLength == 1 && selectedCard.CardNumber.equals(topCard.CardNumber)) {
+		if (boardLength == 1 && selectedCard.getCardNumber().equals(topCard.getCardNumber())) {
 			System.out.println("PİŞTİ!!");
-			player.PistiCount++;
-			AddCardsToPistiCards(player, PistiCards, player.PistiCount, board);
+			player.increasePistiCount();
+			AddCardsToPistiCards(player, PistiCards, player.getPistiCount(), board);
 			RemoveCardsFromBoard(board);
 			isWinner = true;
 
@@ -174,8 +173,8 @@ public class Game {
 
 		if (topCard != null) {
 
-			if (selectedCard.CardNumber.equals(topCard.CardNumber) || selectedCard.CardNumber.equals("J")) {
-				AddCardsToOwnedCards(player, board, player.OwnedCards);
+			if (selectedCard.getCardNumber().equals(topCard.getCardNumber()) || selectedCard.getCardNumber().equals("J")) {
+				AddCardsToOwnedCards(player, board, player.getOwnedCards());
 				RemoveCardsFromBoard(board);
 				isWinner = true;
 
@@ -189,7 +188,7 @@ public class Game {
 	// from board.
 	public static void CheckLastBoard(Card[] board, Player lastWinner) {
 
-		AddCardsToOwnedCards(lastWinner, board, lastWinner.OwnedCards);
+		AddCardsToOwnedCards(lastWinner, board, lastWinner.getOwnedCards());
 		RemoveCardsFromBoard(board);
 	}
 
@@ -197,13 +196,13 @@ public class Game {
 		int boardLength = GetBoardLength(board);
 		if (OwnedCards[0] == null) {
 			for (int i = 0; i < boardLength; i++) {
-				player.OwnedCards[i] = board[i];
+				player.getOwnedCards()[i] = board[i];
 			}
 		} else {
 			int currentOwnedCardsLength = player.getOwnedCardsLength();
 			int boardIndex = 0;
 			for (int i = currentOwnedCardsLength; i < currentOwnedCardsLength + boardLength; i++) {
-				player.OwnedCards[i] = board[boardIndex];
+				player.getOwnedCards()[i] = board[boardIndex];
 				boardIndex++;
 			}
 		}
@@ -213,13 +212,13 @@ public class Game {
 	public static void AddCardsToPistiCards(Player player, Card[] PistiCards, int PistiCount, Card[] board) {
 		if (PistiCards[0] == null) {
 			for (int i = 0; i < PistiCount * 2; i++) {
-				player.PistiCards[i] = board[i];
+				player.getPistiCards()[i] = board[i];
 			}
 		} else {
 			int currentLength = player.getPistiCardsLength();
 			int boardIndex = 0;
 			for (int i = currentLength; i < PistiCount * 2; i++) {
-				player.PistiCards[i] = board[boardIndex];
+				player.getPistiCards()[i] = board[boardIndex];
 				boardIndex++;
 			}
 		}
@@ -264,9 +263,9 @@ public class Game {
 			int cardindex = 0;
 			for (int i = 0; i < 4; i++) {
 
-				player1.ActiveHand[i] = cards[cardindex];
+				player1.getActiveHand()[i] = cards[cardindex];
 				cardindex++;
-				computer.ActiveHand[i] = cards[cardindex];
+				computer.getActiveHand()[i] = cards[cardindex];
 				cardindex++;
 				board[i] = cards[cardindex];
 				cardindex++;
@@ -276,9 +275,9 @@ public class Game {
 			int cardindex = 4 + ((hand - 1) * 8);
 			for (int i = 0; i < 4; i++) {
 
-				player1.ActiveHand[i] = cards[cardindex];
+				player1.getActiveHand()[i] = cards[cardindex];
 				cardindex++;
-				computer.ActiveHand[i] = cards[cardindex];
+				computer.getActiveHand()[i] = cards[cardindex];
 				cardindex++;
 
 			}
@@ -289,7 +288,7 @@ public class Game {
 	public static Card[] AddCardsToBoard(Card[] board, Card[] ActiveHand, int cardOrder, int times) {
 		if (times == 1) {
 			int lastCardIndex = 3;
-			if (board[lastCardIndex].CardNumber != ActiveHand[cardOrder].CardNumber) {
+			if (board[lastCardIndex].getCardNumber() != ActiveHand[cardOrder].getCardNumber()) {
 				lastCardIndex++;
 				board[lastCardIndex] = ActiveHand[cardOrder];
 
@@ -350,24 +349,24 @@ public class Game {
 		int specialCardsPoints = 0;
 		int specialCardCounter = 0;
 		for (int i = 0; i < currentOwnedCardsLength; i++) {
-			if (player.OwnedCards[i].GetCardName().equals("♦10")) {
+			if (player.getOwnedCards()[i].GetCardName().equals("♦10")) {
 				specialCardsPoints += 3;
 				specialCardCounter++;
 			}
-			if (player.OwnedCards[i].GetCardName().equals("♣2")) {
+			if (player.getOwnedCards()[i].GetCardName().equals("♣2")) {
 				specialCardsPoints += 2;
 				specialCardCounter++;
 			}
 
 		}
 		int normalCardsNumber = numberOfOwnedCards - specialCardCounter; // normal cards are 1 point
-		player.totalPoint = pistiCardsPoint + specialCardsPoints + normalCardsNumber;
+		player.setTotalPoint(pistiCardsPoint + specialCardsPoints + normalCardsNumber);
 
-		if (numberOfOwnedCards + player.PistiCount * 2 > 26) {
-			player.totalPoint += 3;
+		if (numberOfOwnedCards + player.getPistiCount() * 2 > 26) {
+			player.setTotalPoint(player.getTotalPoint() + 3);
 		}
-		System.out.println(player.Name + "'s total point :" + player.totalPoint);
-		return player.totalPoint;
+		System.out.println(player.getName() + "'s total point :" + player.getTotalPoint());
+		return player.getTotalPoint();
 	}
 
 }

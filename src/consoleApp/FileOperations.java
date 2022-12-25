@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class FileOperations {
-	public static String FileName;
+	private static String FileName;
 
 	public FileOperations() {
 		this.FileName = "leaderboard.txt";
@@ -21,7 +21,7 @@ public class FileOperations {
 		int indexToAdd = length;
 
 		for (int i = 0; i < playersInFile.length - 1; i++) {
-			if (playersInFile[i] != null && playersInFile[i].totalPoint > currentPlayer.totalPoint) {
+			if (playersInFile[i] != null && playersInFile[i].getTotalPoint() > currentPlayer.getTotalPoint()) {
 				indexToAdd = i + 1;
 			}
 		}
@@ -73,7 +73,7 @@ public class FileOperations {
 				if (!name.equals("")) {
 					int point = reader.nextInt();
 					Player player = new Player(name);
-					player.totalPoint = point;
+					player.setTotalPoint(point);
 					leaderPlayers[playerIndex] = player;
 					playerIndex++;
 				}
@@ -102,8 +102,8 @@ public class FileOperations {
 
 			for (int i = 0; i < newLeaderboard.length; i++) {
 				if (newLeaderboard[i] != null) {
-					fileWriter.append(newLeaderboard[i].Name + "\n");
-					fileWriter.append(newLeaderboard[i].totalPoint + "\n");
+					fileWriter.append(newLeaderboard[i].getName() + "\n");
+					fileWriter.append(newLeaderboard[i].getTotalPoint() + "\n");
 				}
 			}
 

@@ -1,9 +1,9 @@
 package consoleApp;
 
 public class Card {
-	public String Suit;
-	public String CardNumber;
-	public int CardId;
+	private String Suit;
+	private String CardNumber;
+	private int CardId;
 
 	public Card(int cardId) {
 		this.CardId = cardId;
@@ -11,6 +11,11 @@ public class Card {
 		this.CardNumber = getCardNumber(cardId);
 	}
 
+	
+	public String getCardNumber() {
+		return this.CardNumber;
+	}
+	
 	public String GetCardName() {
 		return this.Suit + this.CardNumber;
 
