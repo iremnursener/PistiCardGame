@@ -23,6 +23,7 @@ public class Game {
 		Player computer = new Player("Computer");
 		Card[] board = new Card[52];
 		Player lastWinner = null;
+		FileOperations operator=new FileOperations();
 
 		int cutPoint = GetCutPointFromUser(); // gets the cut point from user
 
@@ -111,8 +112,9 @@ public class Game {
 			System.out.println("DEUCE");
 		}
 
-// Writing to a file
-		SavePlayerToLeaderboard(winner);
+// Saving top scores to a file
+		//SavePlayerToLeaderboard(winner);
+		operator.SavePlayerToLeaderboard(winner);
 //---------------------------------------------------------------------------
 	}
 
