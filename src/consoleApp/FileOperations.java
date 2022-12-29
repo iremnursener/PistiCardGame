@@ -13,7 +13,7 @@ public class FileOperations {
 		this.FileName = "leaderboard.txt";
 	}
 
-	public  void SavePlayerToLeaderboard(Player currentPlayer) {
+	public void SavePlayerToLeaderboard(Player currentPlayer) {
 
 		Player[] playersInFile = LoadLeaderboardFromFile();
 		Player[] newLeaderboard = new Player[10];
@@ -42,8 +42,8 @@ public class FileOperations {
 
 		WriteToFile(newLeaderboard);
 	}
-
-	private  File GetLeaderboardFile() {
+//checks if the file already exists or not
+	private File GetLeaderboardFile() {
 		try {
 			File file = new File(FileName);
 			if (file.createNewFile()) {
@@ -59,14 +59,13 @@ public class FileOperations {
 			return null;
 		}
 	}
-
-	private  Player[] LoadLeaderboardFromFile() {
+//reads file
+	private Player[] LoadLeaderboardFromFile() {
 		Player[] leaderPlayers = new Player[10];
 		int playerIndex = 0;
-		File leaderboardFile = GetLeaderboardFile();
 		try {
-			File leaderFile = new File(FileName);
-			Scanner reader = new Scanner(leaderFile);
+			File leaderboardFile = GetLeaderboardFile();
+			Scanner reader = new Scanner(leaderboardFile);
 			while (reader.hasNextLine()) {
 				String name = reader.nextLine();
 
@@ -80,13 +79,17 @@ public class FileOperations {
 			}
 			reader.close();
 		} catch (FileNotFoundException e) {
+			System.out.println("An error occurred while executing file operations.");
+			e.printStackTrace();
+		} catch (Exception e) {
 			System.out.println("An error occurred.");
 			e.printStackTrace();
 		}
+
 		return leaderPlayers;
 	}
 
-	private  int GetArrayLength(Player[] array) {
+	private int GetArrayLength(Player[] array) {
 		for (int i = 0; i < array.length; i++) {
 			if (array[i] == null) {
 				return i;
@@ -95,8 +98,8 @@ public class FileOperations {
 
 		return array.length;
 	}
-
-	private  void WriteToFile(Player[] newLeaderboard) {
+//writes last leaderboard to the file
+	private void WriteToFile(Player[] newLeaderboard) {
 		try {
 			FileWriter fileWriter = new FileWriter(FileName);
 

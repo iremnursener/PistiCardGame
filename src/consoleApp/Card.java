@@ -39,7 +39,7 @@ public class Card {
 
 		if (cardNumber == 1 || cardNumber > 10) {
 			switch (cardNumber) {
-			case 1:
+			case 1: 
 				cardNumberText = "A";
 				break;
 			case 11:

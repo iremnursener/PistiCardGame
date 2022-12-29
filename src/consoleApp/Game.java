@@ -27,18 +27,13 @@ public class Game {
 		Card topCard = null;
 		Card selectedCard = null;
 		Card[] pistiCards = null;
-
 		FileOperations operator = new FileOperations();
 
-		getCutPointFromUser(gameDeck); // checks the entered number is valid or not for the cut
-
-		// int cutPoint = GetCutPointFromUser(); // gets the cut point from user
+		cutDeckFromPoint(gameDeck); // gets input and checks the entered number is valid or not for cutting the deck
 
 		// PrintDeck(gameDeck.getCards()); // CONTROL
 		// gameDeck.CutDeck(cutPoint); // Cards are ready to play CONTROL
 		// System.out.println("---"); // CONTROL
-		// PrintDeck(gameDeck.getCards()); // CONTROL
-
 		// PrintDeck(gameDeck.getCards()); // CONTROL
 
 // Game Starts-------------------------------
@@ -60,7 +55,7 @@ public class Game {
 				System.out.println();
 				System.out.println("════════════════════════════════════════");
 				System.out.println("Choose one card to play:");
-
+//Here we select a valid card order to play and evaluate the card
 				int a = 0;
 				for (int i = 0; i < a + 1; i++) {
 
@@ -69,7 +64,7 @@ public class Game {
 
 						topCard = GetTopCard(board);
 
-						selectedCard = player1.PlayHand(selectedCardIndex, topCard);
+						selectedCard = player1.PlayHand(selectedCardIndex);
 						pistiCards = player1.getPistiCards();
 						isWinner = EvaluatePlayedCard(player1, selectedCard, board, topCard, pistiCards);
 
@@ -83,7 +78,7 @@ public class Game {
 				if (isWinner == true) {
 					lastWinner = player1;
 				}
-
+//same process for the computer
 				topCard = GetTopCard(board);
 
 				selectedCard = computer.PlayHand(topCard);
@@ -92,17 +87,18 @@ public class Game {
 				if (isWinner == true) {
 					lastWinner = computer;
 				}
-
+//At the end of every play we show the current owned cards
 				player1.PrintOwnedCards(player1);
 				System.out.println("Pişti:" + player1.getPistiCount());
 			}
 		}
 //Game is finished-----------------------------------------------------------
+		// Announced the winner
 		System.out.println("🏁Game is finished🏁");
 		System.out.println("►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►►");
 		System.out.println("Last winner is " + lastWinner.getName());
 		CheckLastBoard(board, lastWinner);
-
+//Prints owned cards for each player
 		player1.PrintOwnedCards(player1);
 		System.out.println("Pişti:" + player1.getPistiCount());
 		player1.PrintPistiCards(player1);
@@ -110,14 +106,15 @@ public class Game {
 		computer.PrintOwnedCards(computer);
 		System.out.println("Pişti:" + computer.getPistiCount());
 		computer.PrintPistiCards(computer);
-
+//Prints empty game table
 		PrintGameTable(board, computer, player1);
 		System.out.println();
-
-		int point1 = CalculatePoints(player1, player1.getOwnedCards(), player1.getPistiCards(), player1.getTotalPoint());
+//gets total points for each player
+		int point1 = CalculatePoints(player1);
 		System.out.println();
-		int point2 = CalculatePoints(computer, computer.getOwnedCards(), computer.getPistiCards(), computer.getTotalPoint());
+		int point2 = CalculatePoints(computer);
 		Player winner = null;
+//determines who the winner is
 		int winnerPoint = 0;
 		if (point1 > point2) {
 			winner = player1;
@@ -136,7 +133,8 @@ public class Game {
 //---------------------------------------------------------------------------
 	}
 
-	public static void getCutPointFromUser(Deck gameDeck) {
+//cut deck from a given point(gets input)
+	public static void cutDeckFromPoint(Deck gameDeck) {
 		int a = 0;
 		for (int i = 0; i < a + 1; i++) {
 			try {
@@ -151,6 +149,7 @@ public class Game {
 
 	}
 
+//Evaluates played cards 
 	private static Boolean EvaluatePlayedCard(Player player, Card selectedCard, Card[] board, Card topCard,
 			Card[] PistiCards) {
 		Boolean isWinner = false;
@@ -173,7 +172,8 @@ public class Game {
 
 		if (topCard != null) {
 
-			if (selectedCard.getCardNumber().equals(topCard.getCardNumber()) || selectedCard.getCardNumber().equals("J")) {
+			if (selectedCard.getCardNumber().equals(topCard.getCardNumber())
+					|| selectedCard.getCardNumber().equals("J")) {
 				AddCardsToOwnedCards(player, board, player.getOwnedCards());
 				RemoveCardsFromBoard(board);
 				isWinner = true;
@@ -192,6 +192,7 @@ public class Game {
 		RemoveCardsFromBoard(board);
 	}
 
+//add cards to players owned cards
 	public static void AddCardsToOwnedCards(Player player, Card[] board, Card[] OwnedCards) {
 		int boardLength = GetBoardLength(board);
 		if (OwnedCards[0] == null) {
@@ -209,6 +210,7 @@ public class Game {
 
 	}
 
+//add cards to players pişti cards 
 	public static void AddCardsToPistiCards(Player player, Card[] PistiCards, int PistiCount, Card[] board) {
 		if (PistiCards[0] == null) {
 			for (int i = 0; i < PistiCount * 2; i++) {
@@ -224,6 +226,7 @@ public class Game {
 		}
 	}
 
+//clears board 
 	public static void RemoveCardsFromBoard(Card[] board) {
 		int boardLength = GetBoardLength(board);
 
@@ -233,6 +236,7 @@ public class Game {
 
 	}
 
+//gets the top card
 	private static Card GetTopCard(Card[] board) { // we need to see the top card to decide which card we should play
 
 		int boardLength = GetBoardLength(board); // we need to know the length of the board to see the last card on the
@@ -243,6 +247,7 @@ public class Game {
 		return null;
 	}
 
+//gets the current lenght of the board 
 	private static int GetBoardLength(Card[] board) { // we search for all the indexes of board.the first "i" that gives
 														// us the value null is the current length of the array.
 
@@ -256,7 +261,7 @@ public class Game {
 								// defined first.
 	}
 
-//Dealing Hands
+//Dealing Hands Functional Requirement 4
 	public static void DealHands(Card[] cards, Player player1, Player computer, Card[] board, int hand) {
 		// Dealing First Hand (Including Board)
 		if (hand == 1) {
@@ -285,6 +290,7 @@ public class Game {
 
 	}
 
+//Adds cards to board
 	public static Card[] AddCardsToBoard(Card[] board, Card[] ActiveHand, int cardOrder, int times) {
 		if (times == 1) {
 			int lastCardIndex = 3;
@@ -306,7 +312,7 @@ public class Game {
 		return cutPoint;
 	}
 
-//Printing Shuffled Deck
+//Printing Deck
 	public static void PrintDeck(Card[] cards) {
 		for (int i = 0; i < cards.length; i++) {
 			System.out.println(cards[i].GetCardName());
@@ -316,10 +322,10 @@ public class Game {
 //Printing ActiveHand
 	public static void PrintGameTable(Card[] board, Player computer, Player player1) {
 		System.out.println();
-		System.out.print("Computer ➤  ");
-		computer.PrintActiveHand();
+		// System.out.print("Computer ➤ ");
+		// computer.PrintActiveHand(); //to see computers active hand
 		System.out.println();
-		System.out.println("════════════════════════════════════════");
+		// System.out.println("════════════════════════════════════════");
 		System.out.println("❮ BOARD ❯");
 
 		int boardLength = GetBoardLength(board);
@@ -342,13 +348,15 @@ public class Game {
 
 	}
 
-	private static int CalculatePoints(Player player, Card[] OwnedCards, Card[] PistiCards, int totalPoint) {
-		int currentOwnedCardsLength = player.getOwnedCardsLength();
-		int numberOfOwnedCards = currentOwnedCardsLength;
+//#Calculating Total Points Functional Requirement 5
+	private static int CalculatePoints(Player player) {
+
+		int numberOfOwnedCards = player.getOwnedCardsLength();
+		;
 		int pistiCardsPoint = (player.getPistiCount()) * 10;
 		int specialCardsPoints = 0;
 		int specialCardCounter = 0;
-		for (int i = 0; i < currentOwnedCardsLength; i++) {
+		for (int i = 0; i < numberOfOwnedCards; i++) {
 			if (player.getOwnedCards()[i].GetCardName().equals("♦10")) {
 				specialCardsPoints += 3;
 				specialCardCounter++;

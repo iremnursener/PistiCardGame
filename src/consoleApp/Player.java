@@ -39,7 +39,13 @@ public class Player {
 	public Card[] getActiveHand() {
 		return this.ActiveHand;
 	}
+	public int getTotalPoint() {
+		return totalPoint;
+	}
 
+	public void setTotalPoint(int totalPoint) {
+		this.totalPoint = totalPoint;
+	}
 	public int getActiveHandLength() {
 		int lengthCounter = 0;
 		for (int i = 0; i < ActiveHand.length; i++) {
@@ -70,7 +76,7 @@ public class Player {
 		this.PistiCount+=1;
 	}
 	
-
+//Prints players hands
 	public void PrintActiveHand() {
 
 		for (int i = 0; i < 4; i++) {
@@ -79,7 +85,7 @@ public class Player {
 			}
 		}
 	}
-
+//Prints owned cards
 	public void PrintOwnedCards(Player player) {
 		int OwnedCardsLength = getOwnedCardsLength();
 		System.out.print(player.Name + "'s owned cards:  ");
@@ -89,7 +95,7 @@ public class Player {
 
 		}
 	}
-	
+	//Prints pisti cards
 	public void PrintPistiCards(Player player) {
 		int pistiCardsLength=getPistiCardsLength();
 		System.out.print(player.Name + "'s pisti cards:  ");
@@ -99,7 +105,7 @@ public class Player {
 
 		}
 	}
-
+//Remove cards from players hands
 	public Card RemoveCardFromActiveHand(int selectedCardIndex) {
 		Card selectedCard = null;
 		int indexCounter = 0;
@@ -119,8 +125,8 @@ public class Player {
 
 	}
 
-//For player1
-	public Card PlayHand(int selectedCardIndex, Card topCard) {
+//For player1 to play hand
+	public Card PlayHand(int selectedCardIndex) {
 
 		return RemoveCardFromActiveHand(selectedCardIndex);
 
@@ -137,7 +143,7 @@ public class Player {
 		return OwnedCards.length;
 	}
 
-//For computer
+//For computer to play hand
 	public Card PlayHand(Card topCard) {
 
 		int selectedCardOrder = FindBestCardToPlay(topCard);
@@ -217,12 +223,6 @@ return 0;
 		return order;
 	}
 
-	public int getTotalPoint() {
-		return totalPoint;
-	}
-
-	public void setTotalPoint(int totalPoint) {
-		this.totalPoint = totalPoint;
-	}
+	
 
 }

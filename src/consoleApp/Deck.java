@@ -24,7 +24,7 @@ public class Deck {
 
 		return this.cards;
 	}
-
+//Cuts deck
 	public void CutDeck(int cutPoint) {
 		Card[] newCards = new Card[cards.length];
 		int newDeckIndex = 0;
@@ -38,7 +38,7 @@ public class Deck {
 		}
 		this.cards = newCards;
 	}
-
+//Swaps random 2 cards
 	private static Card[] SwapCards(Card[] cards, int from, int to) {
 		Card tempCard = cards[to];
 		cards[to] = cards[from];
@@ -46,7 +46,7 @@ public class Deck {
 
 		return cards;
 	}
-
+//Shuffles deck
 	private Card[] ShuffleDeck(Card[] cards, int shuffleCount) {
 		Random r = new Random();
 
@@ -59,9 +59,6 @@ public class Deck {
 		return cards;
 	}
 
-	public boolean IsAllCardsUsed() {
-		
-		return false;
-	}
+	
 
 }
