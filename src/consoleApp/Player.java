@@ -40,7 +40,7 @@ public class Player {
 		return this.ActiveHand;
 	}
 	public int getTotalPoint() {
-		return totalPoint;
+		return this.totalPoint;
 	}
 
 	public void setTotalPoint(int totalPoint) {

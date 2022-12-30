@@ -138,7 +138,7 @@ public class Game {
 		}
 
 // Saving top scores to a file
-		if (winner != null) { //points can be equal
+		if (winner != null) { //point can be equal
 			operator.SavePlayerToLeaderboard(winner);
 		}
 //---------------------------------------------------------------------------
@@ -319,10 +319,10 @@ public class Game {
 //Printing ActiveHand
 	public static void PrintGameTable(Card[] board, Player computer, Player player1) {
 		System.out.println();
-		// System.out.print("Computer ➤ ");
-		// computer.PrintActiveHand(); //to see computers active hand
+		//System.out.print("Computer ➤ ");
+		//computer.PrintActiveHand(); // to see computers active hand
 		System.out.println();
-		// System.out.println("════════════════════════════════════════");
+		//System.out.println("════════════════════════════════════════");
 		System.out.println("❮ BOARD ❯");
 
 		int boardLength = GetBoardLength(board);
