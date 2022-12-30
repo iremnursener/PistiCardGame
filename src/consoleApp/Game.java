@@ -57,10 +57,20 @@ public class Game {
 				System.out.println("Choose one card to play:");
 //Here we select a valid card order to play and evaluate the card
 				int a = 0;
+				int selectedCardIndex = 0;
 				for (int i = 0; i < a + 1; i++) {
 
 					try {
-						int selectedCardIndex = scan.nextInt();
+
+						if (scan.hasNextInt()) {
+							selectedCardIndex = scan.nextInt();
+						} else {
+							System.out.println("Invalid input. Please try again.");
+							System.out.println();
+							a++;
+							scan.nextLine();
+							continue;
+						}
 
 						topCard = GetTopCard(board);
 
@@ -69,8 +79,7 @@ public class Game {
 						isWinner = EvaluatePlayedCard(player1, selectedCard, board, topCard, pistiCards);
 
 					} catch (Exception e) {
-						System.out.println("Something went wrong.Please enter a number between 1-"
-								+ player1.getActiveHandLength());
+						System.out.println("Something went wrong.Please enter a valid card number.");
 						a++;
 					}
 				}
@@ -129,7 +138,9 @@ public class Game {
 		}
 
 // Saving top scores to a file
-		operator.SavePlayerToLeaderboard(winner);
+		if (winner != null) { //points can be equal
+			operator.SavePlayerToLeaderboard(winner);
+		}
 //---------------------------------------------------------------------------
 	}
 
@@ -247,7 +258,7 @@ public class Game {
 		return null;
 	}
 
-//gets the current lenght of the board 
+//gets the current length of the board 
 	private static int GetBoardLength(Card[] board) { // we search for all the indexes of board.the first "i" that gives
 														// us the value null is the current length of the array.
 
@@ -261,7 +272,7 @@ public class Game {
 								// defined first.
 	}
 
-//Dealing Hands Functional Requirement 4
+//Dealing Hands 
 	public static void DealHands(Card[] cards, Player player1, Player computer, Card[] board, int hand) {
 		// Dealing First Hand (Including Board)
 		if (hand == 1) {
@@ -288,20 +299,6 @@ public class Game {
 			}
 		}
 
-	}
-
-//Adds cards to board
-	public static Card[] AddCardsToBoard(Card[] board, Card[] ActiveHand, int cardOrder, int times) {
-		if (times == 1) {
-			int lastCardIndex = 3;
-			if (board[lastCardIndex].getCardNumber() != ActiveHand[cardOrder].getCardNumber()) {
-				lastCardIndex++;
-				board[lastCardIndex] = ActiveHand[cardOrder];
-
-			}
-
-		}
-		return board;
 	}
 
 //Getting CutPoint From User
@@ -348,7 +345,7 @@ public class Game {
 
 	}
 
-//#Calculating Total Points Functional Requirement 5
+//Calculating Total Points 
 	private static int CalculatePoints(Player player) {
 
 		int numberOfOwnedCards = player.getOwnedCardsLength();
